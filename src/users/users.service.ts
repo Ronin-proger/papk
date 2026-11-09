@@ -17,4 +17,14 @@ export class UsersService {
     this.usersRepository.createUser(name);
     return 'ok';
   }
+
+  updateUser(id: number, name: string) {
+    this.usersRepository.updateUser(id, name);
+    return 'ok';
+  }
+
+  deleteUser(id: number) {
+    this.usersRepository.deleteUser(id);
+    return 'ok';
+  }
 }

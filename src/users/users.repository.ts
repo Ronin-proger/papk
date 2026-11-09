@@ -12,11 +12,13 @@ export class UsersRepository {
   }
 
   getUsers() {
-    let names: string = '';
+    let users = [];
     for (let i = 0; i < UsersRepository.count; i++) {
-      names += UsersRepository.mapa.get(i) + ', ';
+      if (UsersRepository.mapa.has(i)) {
+        users.push({ id: i, name: UsersRepository.mapa.get(i) });
+      }
     }
-    return names;
+    return users;
   }
 
   getUserByID(id: number) {
@@ -26,5 +28,13 @@ export class UsersRepository {
   createUser(name: string) {
     UsersRepository.mapa.set(UsersRepository.count, name);
     UsersRepository.count += 1;
+  }
+
+  updateUser(id: number, name: string) {
+    UsersRepository.mapa.set(id, name);
+  }
+
+  deleteUser(id: number) {
+    UsersRepository.mapa.delete(id);
   }
 }
