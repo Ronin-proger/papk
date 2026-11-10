@@ -1,33 +1,61 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Pool, QueryResult } from 'pg';
+
+type User = {
+  id: number;
+  name: string;
+};
 
 @Injectable()
 export class UsersRepository {
-  constructor(
-    @InjectRepository(User)
-    private readonly repo: Repository<User>,
-  ) {}
+  constructor(readonly pool: Pool) {}
 
-  async getUsers() {
-    return this.repo.find();
+  async getAllUsers(): Promise<string[]> {
+    const result: QueryResult<User> = await this.pool.query<User>('SELECT * FROM users');
+    return result.rows.map((row) => row.name);
   }
 
-  async getUserByID(id: number) {
-    return this.repo.findOne({ where: { id } });
+  async getUserById(userId: number): Promise<string> {
+    const result: QueryResult<User> = await this.pool.query<User>(
+      `SELECT id, name FROM users WHERE id = $1`,
+      [userId],
+    );
+    const user = result.rows[0]?.name;
+    if (user === undefined) {
+      throw new NotFoundException('Пользователь не найден');
+    }
+    return `Это пользователь ${user}, найденный по id = ${userId}`;
   }
 
-  async createUser(name: string) {
-    const user = this.repo.create({ name });
-    return this.repo.save(user);
+  async getUserByName(name: string): Promise<string> {
+    const result: QueryResult<User> = await this.pool.query<User>(
+      `SELECT id, name FROM users WHERE name = $1`,
+      [name],
+    );
+    const user = result.rows[0]?.name;
+    if (user === undefined) {
+      throw new NotFoundException('Пользователь не найден');
+    }
+    return `Это пользователь ${user}, найденный по имени = ${name}`;
   }
 
-  async updateUser(id: number, name: string) {
-    await this.repo.update(id, { name });
+  async createUser(name: string): Promise<User> {
+    const result = await this.pool.query(
+      `INSERT INTO users (name) VALUES ($1) RETURNING *`,
+      [name],
+    );
+    return result.rows[0];
   }
 
-  async deleteUser(id: number) {
-    await this.repo.delete(id);
+  async updateUser(id: number, name: string): Promise<User> {
+    const result = await this.pool.query(
+      `UPDATE users SET name = $1 WHERE id = $2 RETURNING *`,
+      [name, id],
+    );
+    return result.rows[0];
+  }
+
+  async deleteUser(id: number): Promise<void> {
+    await this.pool.query(`DELETE FROM users WHERE id = $1`, [id]);
   }
 }

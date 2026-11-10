@@ -5,26 +5,27 @@ import { UsersRepository } from './users.repository';
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  getUsers() {
-    return this.usersRepository.getUsers();
+  async getAllUsers() { 
+    return this.usersRepository.getAllUsers(); 
   }
-
-  getUserByID(id: number) {
-    return this.usersRepository.getUserByID(id);
+  
+  async getUserById(id: number) { 
+    return this.usersRepository.getUserById(id); 
   }
-
-  createUser(name: string) {
-    this.usersRepository.createUser(name);
-    return 'ok';
+  
+  async getUserByName(name: string) { 
+    return this.usersRepository.getUserByName(name); 
   }
-
-  updateUser(id: number, name: string) {
-    this.usersRepository.updateUser(id, name);
-    return 'ok';
+  
+  async createUser(name: string) { 
+    return this.usersRepository.createUser(name); 
   }
-
-  deleteUser(id: number) {
-    this.usersRepository.deleteUser(id);
-    return 'ok';
+  
+  async updateUser(id: number, name: string) { 
+    return this.usersRepository.updateUser(id, name); 
+  }
+  
+  async deleteUser(id: number) { 
+    return this.usersRepository.deleteUser(id); 
   }
 }
