@@ -1,40 +1,33 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
 
 @Injectable()
 export class UsersRepository {
-  static mapa: Map<number, string> = new Map();
-  static count: number = 0;
+  constructor(
+    @InjectRepository(User)
+    private readonly repo: Repository<User>,
+  ) {}
 
-  constructor() {
-    this.createUser('petya');
-    this.createUser('vasya');
-    this.createUser('sanya');
+  async getUsers() {
+    return this.repo.find();
   }
 
-  getUsers() {
-    let users = [];
-    for (let i = 0; i < UsersRepository.count; i++) {
-      if (UsersRepository.mapa.has(i)) {
-        users.push({ id: i, name: UsersRepository.mapa.get(i) });
-      }
-    }
-    return users;
+  async getUserByID(id: number) {
+    return this.repo.findOne({ where: { id } });
   }
 
-  getUserByID(id: number) {
-    return UsersRepository.mapa.get(id);
+  async createUser(name: string) {
+    const user = this.repo.create({ name });
+    return this.repo.save(user);
   }
 
-  createUser(name: string) {
-    UsersRepository.mapa.set(UsersRepository.count, name);
-    UsersRepository.count += 1;
+  async updateUser(id: number, name: string) {
+    await this.repo.update(id, { name });
   }
 
-  updateUser(id: number, name: string) {
-    UsersRepository.mapa.set(id, name);
-  }
-
-  deleteUser(id: number) {
-    UsersRepository.mapa.delete(id);
+  async deleteUser(id: number) {
+    await this.repo.delete(id);
   }
 }
