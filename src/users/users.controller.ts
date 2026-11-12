@@ -1,6 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { BlockUserGuard } from '../common/block-user/block-user.guard';
 import { UsersService } from './users.service';
 
+@UseGuards(BlockUserGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

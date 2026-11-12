@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { Pool } from 'pg';
+import { LoggerMiddleware } from '../common/logger/logger.middleware';
 import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
 import { UsersRepository } from './users.repository';
+import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
@@ -23,4 +24,8 @@ import { UsersRepository } from './users.repository';
     },
   ],
 })
-export class UsersModule {}
+export class UsersModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
