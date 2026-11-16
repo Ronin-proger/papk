@@ -9,5 +9,5 @@ export class UserData {
   userId: number;
 
   @Column({ type: 'jsonb' })
-  data: Record<string, any>;
+  data: any;
 }

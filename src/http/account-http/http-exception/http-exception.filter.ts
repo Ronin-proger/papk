@@ -10,17 +10,17 @@ import {
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
+    const res = ctx.getResponse();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message: string | object = 'Произошла непредвиденная ошибка';
+    let message: any = 'Произошла непредвиденная ошибка';
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       message = exception.getResponse();
     }
 
-    response.status(status).json({
+    res.status(status).json({
       status,
       message,
     });

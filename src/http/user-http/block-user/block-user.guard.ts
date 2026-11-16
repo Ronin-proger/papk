@@ -9,10 +9,10 @@ import {
 export class BlockUserGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest();
-    const userId = Number(req.userId || req.headers['x-user-id']);
-    const blocked = [2, 5];
+    const id = Number(req.userId || req.headers['x-user-id']);
+    const blockedUsers = [2, 5];
 
-    if (userId && blocked.includes(userId)) {
+    if (id && blockedUsers.includes(id)) {
       throw new ForbiddenException('Пользователь заблокирован');
     }
 

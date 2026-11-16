@@ -10,37 +10,37 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { BlockUserGuard } from '../common/block-user/block-user.guard';
-import { AccessService } from './access.service';
+import { AccountLogicService } from '../../logic/account-logic/account-logic.service';
+import { BlockUserGuard } from '../user-http/block-user/block-user.guard';
 import { AuthDto } from './dto/auth.dto';
 import { CreateDataDto } from './dto/create-data.dto';
 import { UpdateDataDto } from './dto/update-data.dto';
 
 @Controller('api/v1')
-export class AccessController {
-  constructor(private readonly accessService: AccessService) {}
+export class AccountHttpController {
+  constructor(private accountLogic: AccountLogicService) {}
 
   @Post('auth')
   auth(@Body() dto: AuthDto) {
-    return this.accessService.auth(dto);
+    return this.accountLogic.auth(dto);
   }
 
   @Post('data')
   @UseGuards(BlockUserGuard)
   create(@Req() req: any, @Body() dto: CreateDataDto) {
-    return this.accessService.createData(req.userId, dto);
+    return this.accountLogic.createData(req.userId, dto);
   }
 
   @Get('data')
   @UseGuards(BlockUserGuard)
   findAll(@Req() req: any) {
-    return this.accessService.findAll(req.userId);
+    return this.accountLogic.findAll(req.userId);
   }
 
   @Get('data/:id')
   @UseGuards(BlockUserGuard)
   findOne(@Req() req: any, @Param('id', ParseIntPipe) id: number) {
-    return this.accessService.findOne(id, req.userId);
+    return this.accountLogic.findOne(id, req.userId);
   }
 
   @Patch('data/:id')
@@ -50,12 +50,12 @@ export class AccessController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateDataDto,
   ) {
-    return this.accessService.update(id, req.userId, dto);
+    return this.accountLogic.update(id, req.userId, dto);
   }
 
   @Delete('data/:id')
   @UseGuards(BlockUserGuard)
   remove(@Req() req: any, @Param('id', ParseIntPipe) id: number) {
-    return this.accessService.remove(id, req.userId);
+    return this.accountLogic.remove(id, req.userId);
   }
 }

@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsObject } from 'class-validator';
 
-export class UpdateDataDto {
+export class CreateDataDto {
   @IsObject()
   @IsNotEmpty()
-  data: Record<string, any>;
+  data: any;
 }
