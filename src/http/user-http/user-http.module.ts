@@ -1,11 +1,14 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { UserLogicModule } from '../../logic/user-logic/user-logic.module';
+import { AccountModule } from '../../logic/account/account.module';
+import { UserModule } from '../../logic/user/user.module';
+import { BlockUserGuard } from './block-user/block-user.guard';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { UserHttpController } from './user-http.controller';
 
 @Module({
-  imports: [UserLogicModule],
+  imports: [UserModule, AccountModule],
   controllers: [UserHttpController],
+  providers: [BlockUserGuard],
 })
 export class UserHttpModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

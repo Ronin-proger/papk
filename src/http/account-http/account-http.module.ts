@@ -1,12 +1,18 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { AccountLogicModule } from '../../logic/account-logic/account-logic.module';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
+import { AccountModule } from '../../logic/account/account.module';
+import { BlockUserGuard } from '../user-http/block-user/block-user.guard';
 import { AccessKeyMiddleware } from './access-key/access-key.middleware';
 import { AccountHttpController } from './account-http.controller';
 
 @Module({
-  imports: [AccountLogicModule],
+  imports: [AccountModule],
   controllers: [AccountHttpController],
-  providers: [AccessKeyMiddleware],
+  providers: [AccessKeyMiddleware, BlockUserGuard],
 })
 export class AccountHttpModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

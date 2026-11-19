@@ -1,16 +1,24 @@
-import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
-import { AccountLogicService } from '../../../logic/account-logic/account-logic.service';
+import {
+  Injectable,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+import { AccountService } from '../../../logic/account/account.service';
+
+type RequestWithUserId = Request & { userId?: number };
 
 @Injectable()
 export class AccessKeyMiddleware implements NestMiddleware {
-  constructor(private accountLogic: AccountLogicService) {}
+  constructor(private readonly accountService: AccountService) {}
 
-  async use(req: any, res: any, next: () => void) {
+  async use(req: RequestWithUserId, res: Response, next: NextFunction) {
     const key = req.headers['x-user-access-key'];
-    if (!key) {
+    if (!key || Array.isArray(key)) {
       throw new UnauthorizedException('Нет access key');
     }
-    req.userId = await this.accountLogic.getUserIdByKey(key);
+
+    req.userId = await this.accountService.getUserIdByKey(key);
     next();
   }
 }

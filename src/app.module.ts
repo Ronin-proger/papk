@@ -2,14 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AccountDataModule } from './data/account-data/account-data.module';
-import { UserDataModule } from './data/user-data/user-data.module';
-import { EventsModule } from './events/events.module';
 import { AccountHttpModule } from './http/account-http/account-http.module';
 import { HttpExceptionFilter } from './http/account-http/http-exception/http-exception.filter';
 import { UserHttpModule } from './http/user-http/user-http.module';
-import { AccountLogicModule } from './logic/account-logic/account-logic.module';
-import { UserLogicModule } from './logic/user-logic/user-logic.module';
 
 @Module({
   imports: [
@@ -30,11 +25,6 @@ import { UserLogicModule } from './logic/user-logic/user-logic.module';
         };
       },
     }),
-    UserDataModule,
-    AccountDataModule,
-    EventsModule,
-    UserLogicModule,
-    AccountLogicModule,
     UserHttpModule,
     AccountHttpModule,
   ],

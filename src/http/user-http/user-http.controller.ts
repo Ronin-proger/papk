@@ -8,41 +8,41 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { UserLogicService } from '../../logic/user-logic/user-logic.service';
+import { UserService } from '../../logic/user/user.service';
 import { BlockUserGuard } from './block-user/block-user.guard';
 
 @Controller('users')
 @UseGuards(BlockUserGuard)
 export class UserHttpController {
-  constructor(private userLogic: UserLogicService) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   getAllUsers() {
-    return this.userLogic.getAllUsers();
+    return this.userService.getAllUsers();
   }
 
   @Get('by-name/:name')
   getUserByName(@Param('name') name: string) {
-    return this.userLogic.getUserByName(name);
+    return this.userService.getUserByName(name);
   }
 
   @Get(':id')
   getUserById(@Param('id') id: string) {
-    return this.userLogic.getUserById(+id);
+    return this.userService.getUserById(+id);
   }
 
   @Post()
   createUser(@Body('name') name: string) {
-    return this.userLogic.createUser(name);
+    return this.userService.createUser(name);
   }
 
   @Patch(':id')
   updateUser(@Param('id') id: string, @Body('name') name: string) {
-    return this.userLogic.updateUser(+id, name);
+    return this.userService.updateUser(+id, name);
   }
 
   @Delete(':id')
   deleteUser(@Param('id') id: string) {
-    return this.userLogic.deleteUser(+id);
+    return this.userService.deleteUser(+id);
   }
 }
