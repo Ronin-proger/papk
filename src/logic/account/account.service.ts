@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { AccessTokenService } from '../../data/access-token/access-token.service';
-import { JsonRecordService } from '../../data/json-record/json-record.service';
+import { UserDataService } from '../../data/user-data/user-data.service';
 import { EventsService } from '../../events/events.service';
 import { UserService } from '../user/user.service';
 
@@ -13,7 +13,7 @@ import { UserService } from '../user/user.service';
 export class AccountService {
   constructor(
     private readonly accessTokenService: AccessTokenService,
-    private readonly jsonRecordService: JsonRecordService,
+    private readonly userDataService: UserDataService,
     private readonly eventsService: EventsService,
     private readonly userService: UserService,
   ) {}
@@ -53,22 +53,23 @@ export class AccountService {
   }
 
   createData(userId: number, data: Record<string, unknown>) {
-    return this.jsonRecordService.add(userId, data);
+    return this.userDataService.add(userId, data);
   }
 
   findAll(userId: number) {
-    return this.jsonRecordService.getAll(userId);
+    return this.userDataService.getAll(userId);
   }
 
   findOne(id: number, userId: number) {
-    return this.jsonRecordService.getOne(id, userId);
+    return this.userDataService.getOne(id, userId);
   }
 
   update(id: number, userId: number, data: Record<string, unknown>) {
-    return this.jsonRecordService.update(id, userId, data);
+    return this.userDataService.update(id, userId, data);
   }
 
   remove(id: number, userId: number) {
-    return this.jsonRecordService.remove(id, userId);
+    return this.userDataService.remove(id, userId);
   }
 }
+

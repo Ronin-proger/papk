@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Pool } from 'pg';
 
 type UserRow = {
@@ -8,21 +8,8 @@ type UserRow = {
 };
 
 @Injectable()
-export class UsersRepository implements OnModuleInit {
+export class UsersRepository {
   constructor(private readonly pool: Pool) {}
-
-  async onModuleInit() {
-    await this.pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        blocked boolean NOT NULL DEFAULT false
-      )
-    `);
-    await this.pool.query(
-      'ALTER TABLE users ADD COLUMN IF NOT EXISTS blocked boolean NOT NULL DEFAULT false',
-    );
-  }
 
   async findByName(name: string) {
     const res = await this.pool.query<UserRow>(

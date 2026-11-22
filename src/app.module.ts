@@ -21,7 +21,7 @@ import { UserHttpModule } from './http/user-http/user-http.module';
           password: config.get('DB_PASS') || 'password',
           database: config.get('DB_NAME') || 'users_db',
           autoLoadEntities: true,
-          synchronize: true,
+          synchronize: false,
         };
       },
     }),
