@@ -33,7 +33,7 @@ export class UsersRepository {
     if (!u) {
       throw new NotFoundException('Пользователь не найден');
     }
-    return `Это пользователь ${u.name}, найденный по id = ${id}`;
+    return { id: u.id, name: u.name };
   }
 
   async getUserByName(name: string) {
@@ -41,7 +41,7 @@ export class UsersRepository {
     if (!u) {
       throw new NotFoundException('Пользователь не найден');
     }
-    return `Это пользователь ${u.name}, найденный по имени = ${name}`;
+    return { id: u.id, name: u.name };
   }
 
   async createUser(name: string) {
